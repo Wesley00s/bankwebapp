@@ -16,6 +16,7 @@ https://opensource.org/licenses/ECL-2.0
 package sg.edu.sutd.bank.webapp.servlet;
 
 import static sg.edu.sutd.bank.webapp.servlet.ServletPaths.CLIENT_DASHBOARD_PAGE;
+import static sg.edu.sutd.bank.webapp.servlet.ServletPaths.LOGIN;
 
 import java.io.IOException;
 
@@ -23,6 +24,7 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import sg.edu.sutd.bank.webapp.commons.ServiceException;
 import sg.edu.sutd.bank.webapp.model.ClientInfo;
@@ -32,16 +34,30 @@ import sg.edu.sutd.bank.webapp.service.ClientInfoDAOImpl;
 @WebServlet(CLIENT_DASHBOARD_PAGE)
 public class ClientDashboardServlet extends DefaultServlet {
 	private static final long serialVersionUID = 1L;
-	private ClientInfoDAO clientInforDao = new ClientInfoDAOImpl();
-	
+	private ClientInfoDAO clientInfoDao = new ClientInfoDAOImpl();
+
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		try {
-			ClientInfo clientInfo = clientInforDao.loadAccountInfo(req.getRemoteUser());
-			req.getSession().setAttribute("clientInfo", clientInfo);
-		} catch (ServiceException e) {
-			sendError(req, e.getMessage());
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+
+		HttpSession session = req.getSession(false);
+
+		if (session == null || session.getAttribute("authenticatedUser") == null) {
+			redirect(resp, LOGIN);
+			return;
 		}
+
+		String username = (String) session.getAttribute("authenticatedUser");
+
+		try {
+			ClientInfo clientInfo = clientInfoDao.loadAccountInfo(username);
+
+			req.setAttribute("clientInfo", clientInfo);
+
+		} catch (ServiceException e) {
+			sendError(req, "Erro ao carregar informações da conta: " + e.getMessage());
+		}
+
 		forward(req, resp);
 	}
 }

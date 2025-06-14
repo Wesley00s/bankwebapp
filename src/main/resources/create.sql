@@ -40,7 +40,7 @@ LOCK TABLES `client_account` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `client_info`
+-- Table structure for table `CLIENT_INFO`
 --
 
 DROP TABLE IF EXISTS `client_info`;
@@ -81,7 +81,7 @@ DROP TABLE IF EXISTS `client_transaction`;
 CREATE TABLE `client_transaction` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `trans_code` varchar(45) NOT NULL,
-  `status` varchar(45) DEFAULT NULL,
+  `status` varchar(45) DEFAULT 'APPROVED',
   `datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `amount` decimal(19,4) DEFAULT NULL,
   `user_id` int(11) NOT NULL,
@@ -136,7 +136,7 @@ CREATE TABLE `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_name` varchar(45) NOT NULL,
   `password` varchar(45) NOT NULL,
-  `status` varchar(45) DEFAULT NULL,
+  `status` varchar(45) DEFAULT 'APPROVED',
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_name_UNIQUE` (`user_name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;

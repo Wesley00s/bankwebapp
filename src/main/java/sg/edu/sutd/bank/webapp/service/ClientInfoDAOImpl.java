@@ -37,7 +37,7 @@ public class ClientInfoDAOImpl extends AbstractDAOImpl implements ClientInfoDAO 
 		Connection conn = connectDB();
 		PreparedStatement ps;
 		try {
-			ps = prepareStmt(conn, "INSERT INTO CLIENT_INFO(full_name, fin, date_of_birth, occupation, mobile_number, address, email, user_id)"
+			ps = prepareStmt(conn, "INSERT INTO client_info(full_name, fin, date_of_birth, occupation, mobile_number, address, email, user_id)"
 					+ " VALUES(?,?,?,?,?,?,?,?)");
 			int idx = 1;
 			ps.setString(idx++, account.getFullName());
@@ -93,7 +93,7 @@ public class ClientInfoDAOImpl extends AbstractDAOImpl implements ClientInfoDAO 
 		Connection conn = connectDB();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		ClientInfo clientInfo = null;
+		ClientInfo clientInfo;
 		try {
 			ps = conn.prepareStatement(
 					"SELECT info.*, acc.*, u.* FROM client_info info, user u, client_account acc WHERE acc.user_id = u.id and info.user_id = u.id and u.user_name=?");
@@ -126,6 +126,4 @@ public class ClientInfoDAOImpl extends AbstractDAOImpl implements ClientInfoDAO 
 		}
 		return clientInfo;
 	}
-	
-	
 }
