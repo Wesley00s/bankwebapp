@@ -32,7 +32,6 @@ public class UserDAOImpl extends AbstractDAOImpl implements UserDAO {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
-			// MODIFICADO: Adicionar password na consulta
 			ps = conn.prepareStatement("SELECT id, user_name, password, status FROM user WHERE user_name=?");
 			ps.setString(1, userName);
 			rs = ps.executeQuery();
